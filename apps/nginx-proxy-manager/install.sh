@@ -195,9 +195,7 @@ step_start "Node.js"
 
 step_start "Yarn"
   export GNUPGHOME="$(mktemp -d)"
-  for key in 72ECF46A56B4AD39C907BBB71646B01B86E50310; do
-    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ;
-  done
+  os_fetch -O- https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --batch --import >$__OUTPUT
 
   os_fetch -O yarn-v$YARN_VERSION.tar.gz https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz
   os_fetch -O yarn-v$YARN_VERSION.tar.gz.asc https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc
@@ -286,7 +284,7 @@ step_start "Frontend" "Building" "Built"
 step_start "Backend" "Initializing" "Initialized"
   rm -rf /app/config/default.json &>$__OUTPUT
   if [ ! -f /app/config/production.json ]; then
-    _npmConfig="{\n  \"database\": {\n    \"engine\": \"knex-native\",\n    \"knex\": {\n      \"client\": \"sqlite3\",\n      \"connection\": {\n        \"filename\": \"/data/database.sqlite\"\n      }\n    }\n  }\n}"
+    _npmConfig="{\n  \"database\": {\n    \"engine\": \"knex-native\",\n    \"knex\": {\n      \"client\": \"sqlite3\",\n      \"connection\": {\n        \"filename\": \"/data/database.sqlite\"\n[...]"
     printf "$_npmConfig\n" | tee /app/config/production.json >$__OUTPUT
   fi
   cd /app
