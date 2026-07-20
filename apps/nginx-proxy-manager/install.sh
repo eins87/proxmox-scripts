@@ -269,9 +269,12 @@ step_start "Enviroment" "Setting up" "Setup"
 
   # Copy app files
   mkdir -p /app/global /app/frontend/images
-  cp -r backend/* /app
-  if [ -d global ]; then
-  	cp -r global/* /app/global
+  # Copy global contents safely if the directory exists and is not empty
+  if [ -d "global" ]; then
+    # Check if there are files inside to avoid 'cannot stat' errors
+    if [ "$(ls -A global)" ]; then
+        cp -r global/* /app/global/
+    fi
   fi
 
 step_start "Frontend" "Building" "Built"
