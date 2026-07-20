@@ -194,18 +194,9 @@ step_start "Node.js"
   step_end "Node.js ${CLR_CYB}$NODE_VERSION${CLR} ${CLR_GN}Installed"
 
 step_start "Yarn"
-  #export GNUPGHOME="$(mktemp -d)"
-  #for key in 6A010C5166006599AA17F08146C2130DFD2497F5; do
-  #  gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ;
-
   export GNUPGHOME="$(mktemp -d)"
-  YARN_GPG_KEY="72ECF46A56B4AD39C907BBB71646B01B86E50310"
-  gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$YARN_GPG_KEY" \
-  || gpg --batch --keyserver hkps://keyserver.ubuntu.com --recv-keys "$YARN_GPG_KEY" \
-  || {
-    # Fallback: import armored key directly from Yarn
-    curl -fsSL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --batch --import
-  }
+  for key in 72ECF46A56B4AD39C907BBB71646B01B86E50310; do
+    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ;
   done
 
   os_fetch -O yarn-v$YARN_VERSION.tar.gz https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz
